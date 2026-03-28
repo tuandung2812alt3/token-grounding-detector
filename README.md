@@ -1,10 +1,7 @@
 # token-grounding-detector
 
-# Token Grounding Detector
 
 **Beyond the Global Scores: Fine-Grained Token Grounding as a Robust Detector of LVLM Hallucinations**
-
-Code and data coming soon.
 
 ## Overview
 
