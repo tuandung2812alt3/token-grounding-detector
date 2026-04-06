@@ -1,0 +1,78 @@
+models:
+  llava_1_5_7b:
+    hf_name: "llava-hf/llava-1.5-7b-hf"
+    architecture: "concatenation"
+    num_visual_tokens: 576
+    image_size: 336
+    patch_size: 14
+    num_layers: 32
+    temperature: 0.1
+    top_p: 0.5
+    prompt_template: "USER: <image>\nDescribe this image.\nASSISTANT:"
+
+  internvl_2_5_8b:
+    hf_name: "OpenGVLab/InternVL2_5-8B"
+    architecture: "concatenation"
+    num_visual_tokens: 256
+    image_size: 448
+    patch_size: 14
+    num_layers: 32
+    temperature: 0.1
+    top_p: 0.5
+    img_context_token: "<IMG_CONTEXT>"
+    prompt_template: "<|im_start|>user\n<image>\nDescribe this image.<|im_end|>\n<|im_start|>assistant\n"
+
+  qwen2_5_vl_7b:
+    hf_name: "Qwen/Qwen2.5-VL-7B-Instruct"
+    architecture: "concatenation"
+    num_visual_tokens: null
+    image_size: 448
+    patch_size: 14
+    num_layers: 32
+    temperature: 0.1
+    top_p: 0.5
+    vision_start_token: "<|vision_start|>"
+    vision_end_token: "<|vision_end|>"
+    prompt_template: null
+
+feature_extraction:
+  ads:
+    top_patch_pct: 0.10
+    connectivity: 8
+    min_blob_area: 3
+    top_k_layers: 10
+  cgc:
+    top_k_pct: 0.05
+    mid_layer_pct: [0.25, 0.75]
+    use_attn_weighting: false
+
+dataset:
+  coco_root: "data/coco"
+  annotation_file: "data/coco/annotations/instances_val2014.json"
+  captions_file: "data/coco/annotations/captions_val2014.json"
+  num_images: 4000
+  train_ratio: 0.90
+  seed: 42
+
+classifiers:
+  xgb:
+    max_depth: [4, 6, 8]
+    learning_rate: [0.1, 0.05]
+    n_estimators: [100, 200, 500]
+  rf:
+    max_depth: [null, 10, 20]
+    n_estimators: [200, 400, 600]
+  mlp:
+    hidden_layer_sizes: [[64], [128], [256]]
+    learning_rate_init: [0.01, 0.001]
+    solver: ["adam", "sgd"]
+    max_iter: 500
+
+pope:
+  pope_dir: "data/pope"
+  splits: ["random", "popular", "adversarial"]
+  prompt_templates:
+    llava_1_5_7b: "USER: <image>\n{question}\nAnswer the question using a single word or phrase.\nASSISTANT:"
+    internvl_2_5_8b: "{question}\nAnswer the question using a single word or phrase."
+    qwen2_5_vl_7b: "{question}\nAnswer the question using a single word or phrase."
+    _default: "{question}\nAnswer the question using a single word or phrase."
